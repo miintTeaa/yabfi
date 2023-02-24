@@ -52,7 +52,7 @@ impl Context {
                 // Ensures self.head is never bigger than isize::MAX
                 self.head = match (self.head as isize).checked_add(1) {
                     Some(v) => v,
-                    None => return Err(RuntimeError::PtrOverflow { bound: PtrOverflowBound::Max })
+                    None => return Err(RuntimeError::PtrOverflow)
                 } as usize;
                 
                 if self.head >= self.data.len() {
@@ -62,7 +62,7 @@ impl Context {
             Expression::Prev => {
                 self.head = match self.head.checked_sub(1) {
                     Some(v) => v,
-                    None => return Err(RuntimeError::PtrOverflow { bound: PtrOverflowBound::Min })
+                    None => return Err(RuntimeError::PtrUnderflow)
                 };
             }
             Expression::Loop(loop_data) => {
