@@ -2,6 +2,9 @@
 name = "yabfi"
 version = "1.0.0"
 edition = "2021"
+license = "MIT"
+description = "Yet another brainfuck interpreter."
+repository = "https://github.com/miintTeaa/yabfi"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
