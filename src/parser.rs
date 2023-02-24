@@ -15,7 +15,7 @@ use nom::{
 
 use nom::{multi::many0, sequence::delimited, IResult, Parser};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Expression {
     /// >
     Next,
