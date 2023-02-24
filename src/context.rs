@@ -5,12 +5,29 @@ use crate::error::*;
 
 use std::error::Error;
 
+/// A brainfuck context.
+/// 
+/// To actually run any programs on this, you need to use eval_exp() and eval_many().
+/// 
+/// ```
+/// use fuck_rs::Context;
+/// 
+/// let context = Context::new();
+/// 
+/// assert_eq!(context.data, vec![0]);
+/// assert_eq!(context.head, 0);
+/// ```
 pub struct Context {
+    /// The tape for this context.
     pub data: Vec<u8>,
+    /// The position of the read/write pointer.
     pub head: usize,
 }
 
 impl Context {
+    /// Creates a new context.
+    /// 
+    /// By default, the head is `0` and the data is `vec![0]`.
     pub fn new() -> Self {
         Self {
             data: vec![0],
@@ -18,6 +35,7 @@ impl Context {
         }
     }
 
+    /// Evaluates a single [expression][Expression].
     #[rustfmt::skip]
     pub fn eval_exp<IoErr: Error>(&mut self, exp: &Expression, in_stream: &mut dyn BfInStream<IoErr>, out_stream: &mut dyn BfOutStream<IoErr>) -> Result<(), RuntimeError<IoErr>> {
         match exp {
@@ -56,6 +74,7 @@ impl Context {
         Ok(())
     }
 
+    /// Evaluates many [expressions][Expression] in sequence.
     pub fn eval_many<IoErr: Error>(&mut self, exps: &Vec<Expression>, in_stream: &mut dyn BfInStream<IoErr>, out_stream: &mut dyn BfOutStream<IoErr>) -> Result<(), RuntimeError<IoErr>> {
         for exp in exps {
             self.eval_exp(exp, in_stream, out_stream)?;

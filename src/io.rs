@@ -3,11 +3,19 @@ use std::{
     io::{Read, Stdin, Stdout, Write},
 };
 
+/// Allows value to be used as an output stream when in use with a [Context].
+///
+/// By default, this is implemented for [Stdout].
 pub trait BfOutStream<Err: Error> {
+    /// Writes a byte to the output stream.
     fn write(&mut self, byte: u8) -> Result<(), Err>;
 }
 
+/// Allows value to be used as an input stream when in use with a [Context].
+///
+/// By default, this is implemented for [Stdin].
 pub trait BfInStream<Err: Error> {
+    /// Reads a byte from the output stream.
     fn read(&mut self) -> Result<u8, Err>;
 }
 

@@ -15,24 +15,25 @@ use nom::{
 
 use nom::{multi::many0, sequence::delimited, IResult, Parser};
 
+/// An expression that can be evaluated by a [Context]. See individual values for more details.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Expression {
-    /// >
+    /// The `>` command.
     Next,
-    /// <
+    /// The `<` command.
     Prev,
-    /// +
+    /// The `+` command.
     Increment,
-    /// -
+    /// The `-` command.
     Decrement,
-    /// .
+    /// The `.` command.
     Output,
-    /// ,
+    /// The `,` command.
     Input,
-    /// Loops (anything delimited by `[` and `]`)
+    /// Loops (anything delimited by `[` and `]`).
     Loop(Vec<Expression>),
 
-    /// Any other character
+    /// Any other string of characters.
     Comment(String),
 }
 
