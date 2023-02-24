@@ -1,7 +1,5 @@
-use crate::BfInStream;
-use crate::BfOutStream;
 use crate::parser::*;
-use crate::error::*;
+use crate::prelude::*;
 
 use std::error::Error;
 
@@ -10,7 +8,7 @@ use std::error::Error;
 /// To actually run any programs on this, you need to use eval_exp() and eval_many().
 /// 
 /// ```
-/// use fuck_rs::Context;
+/// use fuck_rs::prelude::*;
 /// 
 /// let context = Context::new();
 /// 

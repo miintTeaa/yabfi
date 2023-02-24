@@ -4,7 +4,7 @@ use std::{
     process,
 };
 
-use fuck_rs::{self, Context};
+use fuck_rs::{self, prelude::*};
 
 fn main() {
     let mut args = env::args();
@@ -16,7 +16,12 @@ fn main() {
         None => err_with_help(1, "Missing mode".to_string()),
     };
 
-    let code = match mode.as_str() {
+    let input_mode = match args.next() {
+        Some(s) => s,
+        None => err_with_help(1, "Missing input mode".to_string()),
+    };
+
+    let code = match input_mode.as_str() {
         "file" => {
             let input = match args.next() {
                 Some(s) => s,
@@ -24,7 +29,7 @@ fn main() {
             };
             let bytes = match fs::read(input) {
                 Ok(bytes) => bytes,
-                Err(e) => err_no_help(4, format!("Couldn't read from file: {e:#?}")),
+                Err(e) => err_no_help(4, format!("Failed to read file: {e:#?}")),
             };
             match String::from_utf8(bytes) {
                 Ok(s) => s,
@@ -36,25 +41,21 @@ fn main() {
             None => err_with_help(3, "Missing input".to_string()),
         },
         "stdi" => read_stdin(),
-        mode => {
-            err_with_help(2, format!("Invalid mode: {mode}"));
+        _ => {
+            err_with_help(2, format!("Invalid input mode: {input_mode}"));
         }
     };
 
-    let result = fuck_rs::parse(&code);
-
-    match result {
-        Ok(o) => {
-            let mut context = Context::new();
-            match context.eval_many(&o.1, &mut io::stdin(), &mut io::stdout()) {
-                Ok(_) => (),
-                Err(e) => println!("RuntimeError at {}: {e:#?}", context.head),
-            }
-        }
-        Err(e) => {
-            println!("Parse error: {e:#?}");
-            return;
-        }
+    match mode.as_str() {
+        "run" => match fuck_rs::run(&code) {
+            Ok(_) => {}
+            Err(e) => println!("{e}"),
+        },
+        "parse" => match fuck_rs::parse(&code) {
+            Ok(tree) => println!("{tree:#?}"),
+            Err(e) => println!("{e}"),
+        },
+        _ => err_with_help(2, format!("Invalid mode: {mode}")),
     }
 }
 
@@ -89,9 +90,13 @@ fn print_help() {
 
     let program_name = args.next().expect("Receiving program name");
 
-    println!("Format: {program_name} <mode> <input>");
+    println!("Format: {program_name} <mode> <in_mode> <input>");
     print_sep();
     println!("<mode> has these possible values:");
+    println!("  run: Runs brainfuck code.");
+    println!("  parse: Parses brainfuck code and prettyprints syntax tree.");
+    print_sep();
+    println!("<in_mode> has these possible values:");
     println!("  file: Reads <input> as a file path and interprets its content as bf code.");
     println!("        Incompatible with 't' and 'i'.");
     println!("  args: Reads <input> as brainfuck code and interprets it.");

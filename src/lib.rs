@@ -1,16 +1,21 @@
-mod context;
-mod error;
-mod io;
-mod parser;
+mod api;
+pub mod context;
+pub mod error;
+pub mod io_traits;
+pub mod parser;
 
-pub use context::*;
-pub use error::*;
-pub use io::*;
-pub use parser::*;
+pub use api::*;
+
+pub mod prelude {
+    pub use super::context::*;
+    pub use super::error::*;
+    pub use super::io_traits::*;
+    pub use super::parser::Expression;
+}
 
 #[cfg(test)]
 mod test {
-    use crate::*;
+    use crate::prelude::*;
     use std::{error::Error, fmt::Display};
 
     #[derive(Debug)]
@@ -56,7 +61,7 @@ mod test {
 
         #[rustfmt::skip]
         let correct_parse = {
-            use crate::Expression::{
+            use crate::parser::Expression::{
                 Comment,
                 Decrement as Dec,
                 Increment as Inc,
@@ -150,14 +155,15 @@ mod test {
             ]
         };
 
-        let (leftover_input, parse_result) = crate::parse(code).expect("Parsing hello world");
+        let (leftover_input, parse_result) =
+            crate::parser::parse(code).expect("Parsing hello world");
         assert_eq!(leftover_input, "");
         assert_eq!(parse_result, correct_parse);
 
-        let mut context = crate::Context::new();
+        let mut context = Context::new();
 
-        let mut in_stream = b"testing".to_vec();
-        let mut out_stream = Vec::new();
+        let mut in_stream: Vec<u8> = b"testing".to_vec();
+        let mut out_stream: Vec<u8> = Vec::new();
 
         let mut out_expected = b"Hello, World!".to_vec();
         out_expected.extend_from_slice(&in_stream[0..4]);
