@@ -25,13 +25,13 @@ mod test {
     impl Error for TestError {}
 
     impl BfInStream<TestError> for Vec<u8> {
-        fn read(&mut self) -> Result<u8, TestError> {
+        fn bf_read(&mut self) -> Result<u8, TestError> {
             Ok(self.remove(0))
         }
     }
 
     impl BfOutStream<TestError> for Vec<u8> {
-        fn write(&mut self, byte: u8) -> Result<(), TestError> {
+        fn bf_write(&mut self, byte: u8) -> Result<(), TestError> {
             Ok(self.push(byte))
         }
     }

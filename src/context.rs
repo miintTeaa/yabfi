@@ -43,10 +43,10 @@ impl Context {
             Expression::Decrement => {self.data[self.head] = self.data[self.head].wrapping_sub(1);}
             Expression::Increment => {self.data[self.head] = self.data[self.head].wrapping_add(1);}
             Expression::Input => {
-                self.data[self.head] = in_stream.read()?;
+                self.data[self.head] = in_stream.bf_read()?;
             }
             Expression::Output => {
-                out_stream.write(self.data[self.head])?;
+                out_stream.bf_write(self.data[self.head])?;
             }
             Expression::Next => {
                 // Ensures self.head is never bigger than isize::MAX
