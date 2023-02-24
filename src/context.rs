@@ -6,8 +6,8 @@ use crate::error::*;
 use std::error::Error;
 
 pub struct Context {
-    data: Vec<u8>,
-    head: usize,
+    pub data: Vec<u8>,
+    pub head: usize,
 }
 
 impl Context {
