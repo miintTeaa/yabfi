@@ -4,7 +4,7 @@ use std::{
     process,
 };
 
-use fuck_rs::{self, prelude::*};
+use fuck_rs;
 
 fn main() {
     let mut args = env::args();
