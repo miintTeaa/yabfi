@@ -4,7 +4,7 @@ use std::{
     process,
 };
 
-use fuck_rs;
+use yabfi;
 
 fn main() {
     let mut args = env::args();
@@ -47,11 +47,11 @@ fn main() {
     };
 
     match mode.as_str() {
-        "run" => match fuck_rs::run(&code) {
+        "run" => match yabfi::run(&code) {
             Ok(_) => {}
             Err(e) => println!("{e}"),
         },
-        "parse" => match fuck_rs::parse(&code) {
+        "parse" => match yabfi::parse(&code) {
             Ok(tree) => println!("{tree:#?}"),
             Err(e) => println!("{e}"),
         },
